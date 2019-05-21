@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class OperationManagerTest extends TestCase
 {
-
     /**
      * @dataProvider additionProvider
      */
@@ -41,7 +40,6 @@ class OperationManagerTest extends TestCase
 
         $manager->calculate($this->createTempFile($data));
     }
-
 
     private function createTempFile($data)
     {

@@ -17,7 +17,7 @@ class CurrencyModelFactory
      * @return CurrencyInterface
      * @throws CurrencyModelNotFoundException
      */
-    public function getCurrencyModel(string $currency)
+    public function getCurrencyModel(string $currency): CurrencyInterface
     {
         $currency = strtoupper($currency);
         if (!isset($this->currencyModels[$currency])) {
@@ -33,12 +33,15 @@ class CurrencyModelFactory
      * @param CurrencyInterface $currencyModel
      * @param string            $currency
      */
-    public function addCurrencyModel(CurrencyInterface $currencyModel, $currency)
+    public function addCurrencyModel(CurrencyInterface $currencyModel, $currency): void
     {
         $this->currencyModels[$currency] = $currencyModel;
     }
 
-    public function addCurrencies(array $currencySettings)
+    /**
+     * @param array $currencySettings
+     */
+    public function addCurrencies(array $currencySettings): void
     {
         $main = new Currency();
         $main->setCurrency(strtoupper($currencySettings['main']['code']))

@@ -33,8 +33,10 @@ class OperationManager
      * @param string $path
      * @return array
      * @throws EmptyContentException
+     * @throws \App\Exception\CalculatorNotFoundException
+     * @throws \App\Exception\CurrencyModelNotFoundException
      */
-    public function calculate(string $path)
+    public function calculate(string $path): array
     {
         if (!file_exists($path)) {
             throw new EmptyContentException();
@@ -43,7 +45,14 @@ class OperationManager
         return $this->getData($path);
     }
 
-    private function getData(string $path){
+    /**
+     * @param string $path
+     * @return array
+     * @throws \App\Exception\CalculatorNotFoundException
+     * @throws \App\Exception\CurrencyModelNotFoundException
+     */
+    private function getData(string $path): array
+    {
         $commissionData = [];
         foreach ($this->operationEntry($path) as $value) {
             $operation = $this->createOperationModel($value);
@@ -62,7 +71,11 @@ class OperationManager
         return $commissionData;
     }
 
-    private function operationEntry($filePath)
+    /**
+     * @param $filePath
+     * @return \Generator
+     */
+    private function operationEntry($filePath): \Generator
     {
         $file = fopen($filePath, 'r');
 
@@ -73,7 +86,12 @@ class OperationManager
         fclose($file);
     }
 
-    private function createOperationModel(array $operation)
+    /**
+     * @param array $operation
+     * @return Operation
+     * @throws \App\Exception\CurrencyModelNotFoundException
+     */
+    private function createOperationModel(array $operation): Operation
     {
         $model = new Operation();
 

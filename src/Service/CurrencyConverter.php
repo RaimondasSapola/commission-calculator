@@ -17,6 +17,12 @@ class CurrencyConverter
         $this->currencyFactory = $currencyFactory;
     }
 
+    /**
+     * @param string $amount
+     * @param string $currency
+     * @return float
+     * @throws \App\Exception\CurrencyModelNotFoundException
+     */
     public function convert(string $amount, string $currency): float
     {
         $model = $this->currencyFactory->getCurrencyModel($currency);
@@ -25,10 +31,16 @@ class CurrencyConverter
         return (float) $amount;
     }
 
-    public function convertBack(float $amount, string $currency)
+    /**
+     * @param float  $amount
+     * @param string $currency
+     * @return string
+     * @throws \App\Exception\CurrencyModelNotFoundException
+     */
+    public function convertBack(float $amount, string $currency): string
     {
         if ($amount === 0) {
-            return 0;
+            return '0';
         }
 
         $model = $this->currencyFactory->getCurrencyModel($currency);
@@ -37,7 +49,12 @@ class CurrencyConverter
         return $this->roundUp($amount, $model->getRoundPrecision());
     }
 
-    public function roundUp($value, $precision = 0)
+    /**
+     * @param float $value
+     * @param int   $precision
+     * @return string
+     */
+    public function roundUp(float $value, int $precision = 0): string
     {
         if ($value) {
             if (bccomp(strval($value / round($value, $precision)), strval(round(1, 2)), 100) !== 0) {

@@ -26,12 +26,13 @@ class CalculateCurrencyCommand extends Command
         $this->operationManager = $operationManager;
     }
 
-
+    /** @inheritDoc */
     protected function configure()
     {
         $this->addArgument('path', InputArgument::REQUIRED);
     }
 
+    /** @inheritDoc */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $commissionData = $this->operationManager->calculate($input->getArgument('path'));
@@ -39,6 +40,5 @@ class CalculateCurrencyCommand extends Command
         foreach ($commissionData as $commission) {
             $output->writeln($commission);
         }
-
     }
 }

@@ -35,6 +35,10 @@ class NaturalCommissionCalculator implements CalculatorInterface
         $this->maxWithdrawOperations = $maxWithdrawOperations;
     }
 
+    /**
+     * @param Operation $operation
+     * @return float
+     */
     public function calculate(Operation $operation): float
     {
         $week = $this->getWeekIndex($operation->getDate());
@@ -71,17 +75,30 @@ class NaturalCommissionCalculator implements CalculatorInterface
         return 0;
     }
 
-    private function getWeekIndex(\DateTime $date)
+    /**
+     * @param \DateTime $date
+     * @return false|string
+     */
+    private function getWeekIndex(\DateTime $date): string
     {
         return date('W', $date->getTimestamp());
     }
 
-    private function getTax(float $amount)
+    /**
+     * @param float $amount
+     * @return float
+     */
+    private function getTax(float $amount): float
     {
         return ($this->commissionPercentage/100) * $amount;
     }
 
-    private function isRepeatedDate(\DateTime $previous, \DateTime $current)
+    /**
+     * @param \DateTime $previous
+     * @param \DateTime $current
+     * @return bool
+     */
+    private function isRepeatedDate(\DateTime $previous, \DateTime $current): bool
     {
         return $current->getTimestamp() - $previous->getTimestamp() < $this->weekInSeconds;
     }

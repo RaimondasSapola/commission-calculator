@@ -17,7 +17,7 @@ class CalculatorFactory
      * @return CalculatorInterface
      * @throws CalculatorNotFoundException
      */
-    public function getCalculator($type)
+    public function getCalculator($type): CalculatorInterface
     {
         if (!isset($this->calculators[$type])) {
             throw new CalculatorNotFoundException(
@@ -34,7 +34,7 @@ class CalculatorFactory
      * @param CalculatorInterface $calculator
      * @param string              $type
      */
-    public function addCalculator(CalculatorInterface $calculator, $type)
+    public function addCalculator(CalculatorInterface $calculator, string $type): void
     {
         $this->calculators[$type] = $calculator;
     }

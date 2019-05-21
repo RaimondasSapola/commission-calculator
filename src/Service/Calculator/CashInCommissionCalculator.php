@@ -24,6 +24,10 @@ class CashInCommissionCalculator implements CalculatorInterface
         $this->commissionMaxAmount = $commissionMaxAmount;
     }
 
+    /**
+     * @param Operation $operation
+     * @return float
+     */
     public function calculate(Operation $operation): float
     {
         $calculatedCommission = ($this->commissionPercentage/100) * $operation->getOperationAmountMain();
