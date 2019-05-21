@@ -1,0 +1,75 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    currencies:
+        main:
+            code: 'eur'
+            rate: 1
+            precision: 2
+        sub:
+            jpy:
+                rate: 129.53
+                precision: 0
+            usd:
+                rate: 1.1497
+                precision: 2
+    cash_in_commission_tax_percentage: 0.03
+    cash_in_max_commission_tax: 5.00
+    legal_withdraw_commission_tax_percentage: 0.3
+    legal_withdraw_commission_tax_min_amount: 0.50
+    natural_withdraw_commission_tax_percentage: 0.3
+    natural_withdraw_tax_free_amount: 1000.00
+    natural_withdraw_max_operations_per_week: 3
+
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    App\Service\Calculator\CashInCommissionCalculator:
+        arguments:
+            - '%cash_in_commission_tax_percentage%'
+            - '%cash_in_max_commission_tax%'
+        tags:
+            - { name: 'commission.calculator', type: 'cash_in' }
+
+    App\Service\Calculator\NaturalCommissionCalculator:
+        arguments:
+            - '%natural_withdraw_commission_tax_percentage%'
+            - '%natural_withdraw_tax_free_amount%'
+            - '%natural_withdraw_max_operations_per_week%'
+        tags:
+            - { name: 'commission.calculator', type: 'natural' }
+
+    App\Service\Calculator\LegalCommissionCalculator:
+        arguments:
+            - '%legal_withdraw_commission_tax_percentage%'
+            - '%legal_withdraw_commission_tax_min_amount%'
+        tags:
+            - { name: 'commission.calculator', type: 'legal' }
+
+    App\Service\CurrencyModelFactory:
+        calls:
+            - method: addCurrencies
+              arguments:
+                  - '%currencies%'
